@@ -1,0 +1,70 @@
+- name: Create directory
+  ansible.builtin.file:
+    path: /usr/share/postgresql-common/pgdg
+    state: directory
+
+- name: Import PostgreSQL key
+  ansible.builtin.get_url:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+
+- name: Add PostgreSQL debian repo
+  deb822_repository:
+    name: pgdg
+    types:
+      - deb
+      - deb-src
+    uris: https://apt.postgresql.org/pub/repos/apt
+    suites: trixie-pgdg
+    architectures: amd64
+    components:
+      - main
+    signed_by: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install PostgreSQL 16 & required dependencies
+  ansible.builtin.apt:
+    pkg:
+      - postgresql-16
+      - python3-psycopg2 # Required to create the database
+    state: present
+
+- name: Copy pg_hba.conf file
+  ansible.builtin.copy:
+    src: files/pg_hba.conf
+    dest: /etc/postgresql/16/main/pg_hba.conf
+
+- name: Create paul user
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: "{{ POSTGRESQL_USERNAME }}"
+    password: "{{ POSTGRESQL_PASSWORD }}"
+
+- name: Create the database
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: "{{ POSTGRESQL_DB }}"
+    login_user: postgres
+
+- name: Create directory
+  ansible.builtin.file:
+    path: /var/lib/pgsql
+    state: directory
+
+- name: Copy application
+  ansible.builtin.copy:
+    src: files/schema.sql
+    dest: /var/lib/pgsql/schema.sql
+
+# Modify to fix changed here
+- name: Run query from SQL schema
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_script:
+    login_db: "{{ POSTGRESQL_DB }}"
+    path: /var/lib/pgsql/schema.sql

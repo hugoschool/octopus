@@ -1,2 +1,5 @@
 *.tar
 *.sql
+inventory.yml
+!roles/postgresql/files/*.sql
+password
