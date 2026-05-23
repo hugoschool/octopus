@@ -1,0 +1,12 @@
+- name: Install essential packages
+  ansible.builtin.apt:
+    pkg:
+      - curl
+      - ca-certificates
+      - tar
+    state: present
+
+- name: Set timezone to Europe/Paris
+  become: true
+  community.general.timezone:
+    name: Europe/Paris
