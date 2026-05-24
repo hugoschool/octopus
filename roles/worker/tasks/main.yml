@@ -1,0 +1,45 @@
+- name: Install maven & OpenJDK 21
+  ansible.builtin.apt:
+    pkg:
+      - maven
+      - openjdk-21-jdk
+    state: present
+
+- name: Create directory
+  ansible.builtin.file:
+    path: /app
+    state: directory
+
+- name: Copy application
+  ansible.builtin.copy:
+    src: ../../../worker.tar
+    dest: /app/worker.tar
+
+- name: Unarchive the application
+  ansible.builtin.unarchive:
+    src: /app/worker.tar
+    dest: /app
+    remote_src: yes
+
+# TODO: modify for changed on
+- name: Install dependencies
+  command: mvn dependency:resolve
+  args:
+    chdir: /app/worker
+
+- name: Package jar file
+  command: mvn package
+  args:
+    chdir: /app/worker
+    creates: /app/worker/target/worker-jar-with-dependencies.jar
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    src: files/worker.service
+    dest: /etc/systemd/system/worker.service
+
+- name: Enable application service
+  ansible.builtin.service:
+    name: worker
+    state: started
+    enabled: true

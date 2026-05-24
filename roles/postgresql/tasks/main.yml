@@ -61,7 +61,7 @@
     src: files/schema.sql
     dest: /var/lib/pgsql/schema.sql
 
-# Modify to fix changed here
+# TODO: Modify to fix changed here
 - name: Run query from SQL schema
   become: true
   become_user: postgres

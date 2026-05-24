@@ -1,0 +1,12 @@
+[Unit]
+Description=Worker
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar worker-jar-with-dependencies.jar
+KillMode=control-group
+WorkingDirectory=/app/worker/target
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
