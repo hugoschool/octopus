@@ -1,0 +1,15 @@
+[Unit]
+Description=Result
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/npm start
+KillMode=control-group
+WorkingDirectory=/app/result
+Restart=on-failure
+
+# TODO
+Environment=""
+
+[Install]
+WantedBy=multi-user.target
