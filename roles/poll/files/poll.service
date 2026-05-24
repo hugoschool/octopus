@@ -1,0 +1,12 @@
+[Unit]
+Description=Poll
+After=network.target
+
+[Service]
+ExecStart=/app/poll/.venv/bin/flask run --host=0.0.0.0 --port=80
+KillMode=control-group
+WorkingDirectory=/app/poll
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
