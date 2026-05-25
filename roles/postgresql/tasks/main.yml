@@ -83,12 +83,13 @@
     state: directory
 
 - name: Copy application
+  register: schema
   ansible.builtin.copy:
     src: files/schema.sql
     dest: /var/lib/pgsql/schema.sql
 
-# TODO: Modify to fix changed here
 - name: Run query from SQL schema
+  when: schema.changed
   become: true
   become_user: postgres
   community.postgresql.postgresql_script:
