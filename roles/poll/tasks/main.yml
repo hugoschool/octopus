@@ -35,12 +35,14 @@
     proto: tcp
 
 - name: Copy systemd service
-  ansible.builtin.copy:
+  register: systemd_service
+  ansible.builtin.template:
     src: files/poll.service
     dest: /etc/systemd/system/poll.service
 
 - name: Enable application service
+  when: systemd_service.changed
   ansible.builtin.service:
     name: poll
-    state: started
+    state: restarted
     enabled: true

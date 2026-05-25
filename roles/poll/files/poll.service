@@ -8,5 +8,7 @@ KillMode=control-group
 WorkingDirectory=/app/poll
 Restart=on-failure
 
+Environment="REDIS_HOST={{ hostvars['redis-1']['ansible_host'] }}"
+
 [Install]
 WantedBy=multi-user.target
