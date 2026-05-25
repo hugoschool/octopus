@@ -34,12 +34,14 @@
     creates: /app/worker/target/worker-jar-with-dependencies.jar
 
 - name: Copy systemd service
+  register: systemd_service
   ansible.builtin.copy:
     src: files/worker.service
     dest: /etc/systemd/system/worker.service
 
 - name: Enable application service
+  when: systemd_service.changed
   ansible.builtin.service:
     name: worker
-    state: started
+    state: restarted
     enabled: true
