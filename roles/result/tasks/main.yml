@@ -27,6 +27,12 @@
   community.general.npm:
     path: /app/result
 
+- name: Allow port 80 in the firewall
+  community.general.ufw:
+    rule: allow
+    port: "80"
+    proto: tcp
+
 - name: Copy systemd service
   ansible.builtin.template:
     src: files/result.service
