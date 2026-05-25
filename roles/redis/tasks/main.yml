@@ -9,14 +9,14 @@
     src: files/redis.conf
     dest: /etc/redis/redis.conf
 
-- name: Enable redis
-  service:
-    name: redis-server
-    state: started
-    enabled: true
-
 - name: Allow Redis in the firewall
   community.general.ufw:
     rule: allow
     port: "6379"
     proto: tcp
+
+- name: Enable redis
+  service:
+    name: redis-server
+    state: started
+    enabled: true
