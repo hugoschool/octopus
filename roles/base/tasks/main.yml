@@ -12,6 +12,10 @@
   community.general.timezone:
     name: Europe/Paris
 
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
 - name: Enable firewall
   community.general.ufw:
     state: enabled
