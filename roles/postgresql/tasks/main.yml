@@ -8,6 +8,22 @@
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
 
+- name: Allow PostgreSQL in the firewall
+  community.general.ufw:
+    rule: allow
+    port: "5432"
+    proto: tcp
+
+- name: Copy configuration file
+  ansible.builtin.copy:
+    src: files/postgresql.conf
+    dest: /etc/postgresql/16/main/postgresql.conf
+
+- name: Copy pg_hba.conf file
+  ansible.builtin.copy:
+    src: files/pg_hba.conf
+    dest: /etc/postgresql/16/main/pg_hba.conf
+
 - name: Add PostgreSQL debian repo
   deb822_repository:
     name: pgdg
@@ -31,11 +47,6 @@
       - postgresql-16
       - python3-psycopg2 # Required to create the database
     state: present
-
-- name: Copy pg_hba.conf file
-  ansible.builtin.copy:
-    src: files/pg_hba.conf
-    dest: /etc/postgresql/16/main/pg_hba.conf
 
 - name: Create paul user
   become: true
