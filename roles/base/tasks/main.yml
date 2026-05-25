@@ -4,9 +4,19 @@
       - curl
       - ca-certificates
       - tar
+      - ufw
     state: present
 
 - name: Set timezone to Europe/Paris
   become: true
   community.general.timezone:
     name: Europe/Paris
+
+- name: Enable firewall
+  community.general.ufw:
+    state: enabled
+
+- name: Allow OpenSSH in the firewall
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
