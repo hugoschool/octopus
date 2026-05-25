@@ -5,6 +5,7 @@
     state: present
 
 - name: Copy configuration
+  register: redis_conf
   ansible.builtin.copy:
     src: files/redis.conf
     dest: /etc/redis/redis.conf
@@ -16,7 +17,8 @@
     proto: tcp
 
 - name: Enable redis
+  when: redis_conf.changed
   service:
     name: redis-server
-    state: started
+    state: restarted
     enabled: true
