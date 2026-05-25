@@ -28,7 +28,7 @@
     path: /app/result
 
 - name: Copy systemd service
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: files/result.service
     dest: /etc/systemd/system/result.service
 
