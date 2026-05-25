@@ -35,7 +35,7 @@
 
 - name: Copy systemd service
   register: systemd_service
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: files/worker.service
     dest: /etc/systemd/system/worker.service
 
