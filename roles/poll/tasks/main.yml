@@ -20,7 +20,7 @@
   ansible.builtin.unarchive:
     src: /app/poll.tar
     dest: /app
-    remote_src: yes
+    remote_src: true
 
 - name: Create venv and install specified python requirements
   ansible.builtin.pip:

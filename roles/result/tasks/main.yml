@@ -19,7 +19,7 @@
   ansible.builtin.unarchive:
     src: /app/result.tar
     dest: /app
-    remote_src: yes
+    remote_src: true
 
 # Why is there no package-lock.json?
 # We could've done an easy npm ci instead of npm install...

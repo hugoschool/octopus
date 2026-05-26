@@ -20,7 +20,7 @@
   ansible.builtin.unarchive:
     src: /app/worker.tar
     dest: /app
-    remote_src: yes
+    remote_src: true
 
 - name: Install dependencies
   when: unarchiving.changed
