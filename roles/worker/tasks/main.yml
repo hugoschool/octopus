@@ -16,13 +16,14 @@
     dest: /app/worker.tar
 
 - name: Unarchive the application
+  register: unarchiving
   ansible.builtin.unarchive:
     src: /app/worker.tar
     dest: /app
     remote_src: yes
 
-# TODO: modify for changed on
 - name: Install dependencies
+  when: unarchiving.changed
   command: mvn dependency:resolve
   args:
     chdir: /app/worker
