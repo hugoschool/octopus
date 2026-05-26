@@ -18,7 +18,7 @@
 
 - name: Enable redis
   when: redis_conf.changed
-  service:
+  ansible.builtin.service:
     name: redis-server
     state: restarted
     enabled: true

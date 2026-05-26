@@ -24,12 +24,12 @@
 
 - name: Install dependencies
   when: unarchiving.changed
-  command: mvn dependency:resolve
+  ansible.builtin.command: mvn dependency:resolve
   args:
     chdir: /app/worker
 
 - name: Package jar file
-  command: mvn package
+  ansible.builtin.command: mvn package
   args:
     chdir: /app/worker
     creates: /app/worker/target/worker-jar-with-dependencies.jar

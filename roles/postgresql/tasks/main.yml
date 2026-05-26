@@ -15,7 +15,7 @@
     proto: tcp
 
 - name: Add PostgreSQL debian repo
-  deb822_repository:
+  ansible.builtin.deb822_repository:
     name: pgdg
     types:
       - deb
