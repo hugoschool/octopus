@@ -45,13 +45,13 @@
     dest: /etc/postgresql/16/main/postgresql.conf
 
 - name: Copy pg_hba.conf file
-  register: pg_hba
+  register: postgresql_hba
   ansible.builtin.copy:
     src: files/pg_hba.conf
     dest: /etc/postgresql/16/main/pg_hba.conf
 
 - name: Restart PostgreSQL DB
-  when: pg_hba.changed or postgresql_conf.changed
+  when: postgresql_hba.changed or postgresql_conf.changed
   ansible.builtin.service:
     name: postgresql
     state: restarted
@@ -83,13 +83,13 @@
     state: directory
 
 - name: Copy application
-  register: schema
+  register: postgresql_schema
   ansible.builtin.copy:
     src: files/schema.sql
     dest: /var/lib/pgsql/schema.sql
 
 - name: Run query from SQL schema
-  when: schema.changed
+  when: postgresql_schema.changed
   become: true
   become_user: postgres
   community.postgresql.postgresql_script:

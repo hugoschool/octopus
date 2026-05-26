@@ -16,14 +16,14 @@
     dest: /app/worker.tar
 
 - name: Unarchive the application
-  register: unarchiving
+  register: worker_unarchiving
   ansible.builtin.unarchive:
     src: /app/worker.tar
     dest: /app
     remote_src: true
 
 - name: Install dependencies
-  when: unarchiving.changed
+  when: worker_unarchiving.changed
   ansible.builtin.command: mvn dependency:resolve
   args:
     chdir: /app/worker
@@ -35,13 +35,13 @@
     creates: /app/worker/target/worker-jar-with-dependencies.jar
 
 - name: Copy systemd service
-  register: systemd_service
+  register: worker_systemd_service
   ansible.builtin.template:
     src: files/worker.service
     dest: /etc/systemd/system/worker.service
 
 - name: Enable application service
-  when: systemd_service.changed
+  when: worker_systemd_service.changed
   ansible.builtin.service:
     name: worker
     state: restarted
