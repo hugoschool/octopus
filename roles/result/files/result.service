@@ -8,11 +8,11 @@ KillMode=control-group
 WorkingDirectory=/app/result
 Restart=on-failure
 
-Environment="POSTGRES_DB={{ POSTGRESQL_DB }}"
+Environment="POSTGRES_DB={{ postgresql_db }}"
 Environment="POSTGRES_HOST={{ hostvars['postgresql-1']['ansible_host'] }}"
-Environment="POSTGRES_PORT={{ POSTGRESQL_PORT }}"
-Environment="POSTGRES_USER={{ POSTGRESQL_USERNAME }}"
-Environment="POSTGRES_PASSWORD={{ POSTGRESQL_PASSWORD }}"
+Environment="POSTGRES_PORT={{ postgresql_port }}"
+Environment="POSTGRES_USER={{ postgresql_username }}"
+Environment="POSTGRES_PASSWORD={{ postgresql_password }}"
 
 [Install]
 WantedBy=multi-user.target

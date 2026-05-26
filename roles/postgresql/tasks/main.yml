@@ -60,22 +60,22 @@
   become: true
   become_user: postgres
   community.postgresql.postgresql_user:
-    name: "{{ POSTGRESQL_USERNAME }}"
-    password: "{{ POSTGRESQL_PASSWORD }}"
+    name: "{{ postgresql_username }}"
+    password: "{{ postgresql_password }}"
 
 - name: Create the database
   become: true
   become_user: postgres
   community.postgresql.postgresql_db:
-    name: "{{ POSTGRESQL_DB }}"
+    name: "{{ postgresql_db }}"
 
 - name: Grant all privilieges to the database for user
   community.postgresql.postgresql_privs:
-    login_db: "{{ POSTGRESQL_DB }}"
+    login_db: "{{ postgresql_db }}"
     privs: ALL
     type: database
-    objs: "{{ POSTGRESQL_DB }}"
-    role: "{{ POSTGRESQL_USERNAME }}"
+    objs: "{{ postgresql_db }}"
+    role: "{{ postgresql_username }}"
 
 - name: Create directory
   ansible.builtin.file:
@@ -93,15 +93,15 @@
   become: true
   become_user: postgres
   community.postgresql.postgresql_script:
-    login_db: "{{ POSTGRESQL_DB }}"
+    login_db: "{{ postgresql_db }}"
     path: /var/lib/pgsql/schema.sql
 
 - name: Grant all privilieges to the votes table for user
   become: true
   become_user: postgres
   community.postgresql.postgresql_privs:
-    login_db: "{{ POSTGRESQL_DB }}"
+    login_db: "{{ postgresql_db }}"
     privs: ALL
     type: table
     objs: votes
-    role: "{{ POSTGRESQL_USERNAME }}"
+    role: "{{ postgresql_username }}"
