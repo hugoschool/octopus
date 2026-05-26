@@ -10,17 +10,19 @@
   ansible.builtin.file:
     path: /app
     state: directory
+    mode: "0755"
 
 - name: Copy application
   ansible.builtin.copy:
     src: ../../../poll.tar
     dest: /app/poll.tar
+    mode: "0664"
 
 - name: Unarchive the application
   ansible.builtin.unarchive:
     src: /app/poll.tar
     dest: /app
-    remote_src: yes
+    remote_src: true
 
 - name: Create venv and install specified python requirements
   ansible.builtin.pip:
@@ -35,13 +37,14 @@
     proto: tcp
 
 - name: Copy systemd service
-  register: systemd_service
+  register: poll_systemd_service
   ansible.builtin.template:
     src: files/poll.service
     dest: /etc/systemd/system/poll.service
+    mode: "0644"
 
 - name: Enable application service
-  when: systemd_service.changed
+  when: poll_systemd_service.changed
   ansible.builtin.service:
     name: poll
     state: restarted
