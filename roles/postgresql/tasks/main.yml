@@ -2,11 +2,13 @@
   ansible.builtin.file:
     path: /usr/share/postgresql-common/pgdg
     state: directory
+    mode: "0755"
 
 - name: Import PostgreSQL key
   ansible.builtin.get_url:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+    mode: "0644"
 
 - name: Allow PostgreSQL in the firewall
   community.general.ufw:
@@ -43,12 +45,14 @@
   ansible.builtin.copy:
     src: files/postgresql.conf
     dest: /etc/postgresql/16/main/postgresql.conf
+    mode: "0644"
 
 - name: Copy pg_hba.conf file
   register: postgresql_hba
   ansible.builtin.copy:
     src: files/pg_hba.conf
     dest: /etc/postgresql/16/main/pg_hba.conf
+    mode: "0644"
 
 - name: Restart PostgreSQL DB
   when: postgresql_hba.changed or postgresql_conf.changed
@@ -81,12 +85,14 @@
   ansible.builtin.file:
     path: /var/lib/pgsql
     state: directory
+    mode: "0755"
 
 - name: Copy application
   register: postgresql_schema
   ansible.builtin.copy:
     src: files/schema.sql
     dest: /var/lib/pgsql/schema.sql
+    mode: "0644"
 
 - name: Run query from SQL schema
   when: postgresql_schema.changed

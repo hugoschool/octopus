@@ -9,11 +9,13 @@
   ansible.builtin.file:
     path: /app
     state: directory
+    mode: "0755"
 
 - name: Copy application
   ansible.builtin.copy:
     src: ../../../worker.tar
     dest: /app/worker.tar
+    mode: "0664"
 
 - name: Unarchive the application
   register: worker_unarchiving
@@ -39,6 +41,7 @@
   ansible.builtin.template:
     src: files/worker.service
     dest: /etc/systemd/system/worker.service
+    mode: "0644"
 
 - name: Enable application service
   when: worker_systemd_service.changed

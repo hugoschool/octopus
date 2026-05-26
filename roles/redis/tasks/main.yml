@@ -9,6 +9,7 @@
   ansible.builtin.copy:
     src: files/redis.conf
     dest: /etc/redis/redis.conf
+    mode: "0644"
 
 - name: Allow Redis in the firewall
   community.general.ufw:
