@@ -2,29 +2,29 @@
 - name: Base role
   hosts: all
   roles:
-    - role: "roles/base"
+    - role: "base"
 
 - name: Redis database
   hosts: redis
   roles:
-    - role: "roles/redis"
+    - role: "redis"
 
 - name: PostgreSQL database
   hosts: postgresql
   roles:
-    - role: "roles/postgresql"
+    - role: "postgresql"
 
 - name: Poll application
   hosts: poll
   roles:
-    - role: "roles/poll"
+    - role: "poll"
 
 - name: Result application
   hosts: result
   roles:
-    - role: "roles/result"
+    - role: "result"
 
 - name: Worker application
   hosts: worker
   roles:
-    - role: "roles/worker"
+    - role: "worker"
