@@ -15,6 +15,11 @@
     rule: allow
     port: "5432"
     proto: tcp
+    src: "{{ item }}"
+  loop:
+    - "{{ hostvars['result-1']['ansible_host'] }}"
+    - "{{ hostvars['poll-1']['ansible_host'] }}"
+    - "{{ hostvars['worker-1']['ansible_host'] }}"
 
 - name: Add PostgreSQL debian repo
   ansible.builtin.deb822_repository:
