@@ -1,16 +1,19 @@
 - name: Create directory
+  become: true
   ansible.builtin.file:
     path: /usr/share/postgresql-common/pgdg
     state: directory
     mode: "0755"
 
 - name: Import PostgreSQL key
+  become: true
   ansible.builtin.get_url:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
     mode: "0644"
 
 - name: Allow PostgreSQL in the firewall
+  become: true
   community.general.ufw:
     rule: allow
     port: "5432"
@@ -22,6 +25,7 @@
     - "{{ hostvars['worker-1']['ansible_host'] }}"
 
 - name: Add PostgreSQL debian repo
+  become: true
   ansible.builtin.deb822_repository:
     name: pgdg
     types:
@@ -35,10 +39,12 @@
     signed_by: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
 
 - name: Update apt cache
+  become: true
   ansible.builtin.apt:
     update_cache: true
 
 - name: Install PostgreSQL 16 & required dependencies
+  become: true
   ansible.builtin.apt:
     pkg:
       - postgresql-16
@@ -46,6 +52,7 @@
     state: present
 
 - name: Copy configuration file
+  become: true
   register: postgresql_conf
   ansible.builtin.copy:
     src: files/postgresql.conf
@@ -53,6 +60,7 @@
     mode: "0644"
 
 - name: Copy pg_hba.conf file
+  become: true
   register: postgresql_hba
   ansible.builtin.copy:
     src: files/pg_hba.conf
@@ -60,6 +68,7 @@
     mode: "0644"
 
 - name: Restart PostgreSQL DB
+  become: true
   when: postgresql_hba.changed or postgresql_conf.changed
   ansible.builtin.service:
     name: postgresql
@@ -67,20 +76,17 @@
 
 - name: Create paul user
   become: true
-  become_user: postgres
   community.postgresql.postgresql_user:
     name: "{{ postgresql_username }}"
     password: "{{ postgresql_password }}"
 
 - name: Create the database
   become: true
-  become_user: postgres
   community.postgresql.postgresql_db:
     name: "{{ postgresql_db }}"
 
 - name: Grant all privilieges to the database for user
   become: true
-  become_user: postgres
   community.postgresql.postgresql_privs:
     login_db: "{{ postgresql_db }}"
     privs: ALL
@@ -89,12 +95,14 @@
     role: "{{ postgresql_username }}"
 
 - name: Create directory
+  become: true
   ansible.builtin.file:
     path: /var/lib/pgsql
     state: directory
     mode: "0755"
 
 - name: Copy application
+  become: true
   register: postgresql_schema
   ansible.builtin.copy:
     src: files/schema.sql
@@ -104,14 +112,12 @@
 - name: Run query from SQL schema
   when: postgresql_schema.changed
   become: true
-  become_user: postgres
   community.postgresql.postgresql_script:
     login_db: "{{ postgresql_db }}"
     path: /var/lib/pgsql/schema.sql
 
 - name: Grant all privilieges to the votes table for user
   become: true
-  become_user: postgres
   community.postgresql.postgresql_privs:
     login_db: "{{ postgresql_db }}"
     privs: ALL

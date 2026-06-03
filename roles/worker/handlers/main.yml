@@ -5,6 +5,7 @@
   changed_when: false
 
 - name: Restart application service
+  become: true
   ansible.builtin.service:
     name: worker
     state: restarted

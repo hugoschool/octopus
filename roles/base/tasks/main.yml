@@ -1,4 +1,5 @@
 - name: Install essential packages
+  become: true
   ansible.builtin.apt:
     pkg:
       - curl
@@ -13,14 +14,17 @@
     name: Europe/Paris
 
 - name: Set a hostname
+  become: true
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
 
 - name: Enable firewall
+  become: true
   community.general.ufw:
     state: enabled
 
 - name: Allow OpenSSH in the firewall
+  become: true
   community.general.ufw:
     rule: allow
     name: OpenSSH

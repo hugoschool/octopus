@@ -1,4 +1,5 @@
 - name: Install NodeJS & NPM
+  become: true
   ansible.builtin.apt:
     pkg:
       - nodejs
@@ -6,9 +7,11 @@
     state: present
 
 - name: Create directory
+  become: true
   ansible.builtin.file:
     path: /app
     state: directory
+    owner: "{{ ansible_user }}"
     mode: "0755"
 
 - name: Copy application
@@ -30,12 +33,14 @@
     path: /app/result
 
 - name: Allow port 80 in the firewall
+  become: true
   community.general.ufw:
     rule: allow
     port: "80"
     proto: tcp
 
 - name: Copy systemd service
+  become: true
   ansible.builtin.template:
     src: files/result.service
     dest: /etc/systemd/system/result.service
@@ -44,6 +49,7 @@
     - Restart application service
 
 - name: Enable application service
+  become: true
   ansible.builtin.service:
     name: result
     state: started

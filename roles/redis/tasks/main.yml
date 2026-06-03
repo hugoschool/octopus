@@ -1,10 +1,12 @@
 - name: Install Redis
+  become: true
   ansible.builtin.apt:
     pkg:
       - redis
     state: present
 
 - name: Copy configuration
+  become: true
   ansible.builtin.copy:
     src: files/redis.conf
     dest: /etc/redis/redis.conf
@@ -13,6 +15,7 @@
     - Restart redis
 
 - name: Allow Redis in the firewall
+  become: true
   community.general.ufw:
     rule: allow
     port: "6379"
@@ -24,6 +27,7 @@
     - "{{ hostvars['worker-1']['ansible_host'] }}"
 
 - name: Enable redis
+  become: true
   ansible.builtin.service:
     name: redis-server
     state: started
