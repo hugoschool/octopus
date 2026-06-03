@@ -5,11 +5,12 @@
     state: present
 
 - name: Copy configuration
-  register: redis_conf
   ansible.builtin.copy:
     src: files/redis.conf
     dest: /etc/redis/redis.conf
     mode: "0644"
+  notify:
+    - Restart redis
 
 - name: Allow Redis in the firewall
   community.general.ufw:
@@ -23,8 +24,7 @@
     - "{{ hostvars['worker-1']['ansible_host'] }}"
 
 - name: Enable redis
-  when: redis_conf.changed
   ansible.builtin.service:
     name: redis-server
-    state: restarted
+    state: started
     enabled: true

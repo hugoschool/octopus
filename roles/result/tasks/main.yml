@@ -36,15 +36,15 @@
     proto: tcp
 
 - name: Copy systemd service
-  register: result_systemd_service
   ansible.builtin.template:
     src: files/result.service
     dest: /etc/systemd/system/result.service
     mode: "0644"
+  notify:
+    - Restart application service
 
 - name: Enable application service
-  when: result_systemd_service.changed
   ansible.builtin.service:
     name: result
-    state: restarted
+    state: started
     enabled: true

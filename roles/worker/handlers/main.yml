@@ -1,0 +1,10 @@
+- name: Install dependencies
+  ansible.builtin.command: mvn dependency:resolve
+  args:
+    chdir: /app/worker
+  changed_when: false
+
+- name: Restart application service
+  ansible.builtin.service:
+    name: worker
+    state: restarted

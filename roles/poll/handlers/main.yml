@@ -1,0 +1,4 @@
+- name: Restart application service
+  ansible.builtin.service:
+    name: poll
+    state: restarted

@@ -1,9 +1,1 @@
-roles/worker/tasks/main.yml no-changed-when
-
-# TODO: verify if we can use handlers or not
-roles/worker/tasks/main.yml no-handler
-roles/poll/tasks/main.yml no-handler
 roles/postgresql/tasks/main.yml no-handler
-roles/redis/tasks/main.yml no-handler
-roles/result/tasks/main.yml no-handler
-roles/base/tasks/main.yml no-handler

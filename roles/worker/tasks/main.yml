@@ -18,17 +18,12 @@
     mode: "0664"
 
 - name: Unarchive the application
-  register: worker_unarchiving
   ansible.builtin.unarchive:
     src: /app/worker.tar
     dest: /app
     remote_src: true
-
-- name: Install dependencies
-  when: worker_unarchiving.changed
-  ansible.builtin.command: mvn dependency:resolve
-  args:
-    chdir: /app/worker
+  notify:
+    - Install dependencies
 
 - name: Package jar file
   ansible.builtin.command: mvn package
@@ -37,15 +32,15 @@
     creates: /app/worker/target/worker-jar-with-dependencies.jar
 
 - name: Copy systemd service
-  register: worker_systemd_service
   ansible.builtin.template:
     src: files/worker.service
     dest: /etc/systemd/system/worker.service
     mode: "0644"
+  notify:
+    - Restart application service
 
 - name: Enable application service
-  when: worker_systemd_service.changed
   ansible.builtin.service:
     name: worker
-    state: restarted
+    state: started
     enabled: true
