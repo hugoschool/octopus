@@ -79,6 +79,8 @@
     name: "{{ postgresql_db }}"
 
 - name: Grant all privilieges to the database for user
+  become: true
+  become_user: postgres
   community.postgresql.postgresql_privs:
     login_db: "{{ postgresql_db }}"
     privs: ALL
