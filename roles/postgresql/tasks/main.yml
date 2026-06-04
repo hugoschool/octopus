@@ -79,20 +79,12 @@
   community.postgresql.postgresql_user:
     name: "{{ postgresql_username }}"
     password: "{{ postgresql_password }}"
+    role_attr_flags: LOGIN,NOSUPERUSER,NOCREATEDB,NOCREATEROLE,NOINHERIT
 
 - name: Create the database
   become: true
   community.postgresql.postgresql_db:
     name: "{{ postgresql_db }}"
-
-- name: Grant all privilieges to the database for user
-  become: true
-  community.postgresql.postgresql_privs:
-    login_db: "{{ postgresql_db }}"
-    privs: ALL
-    type: database
-    objs: "{{ postgresql_db }}"
-    role: "{{ postgresql_username }}"
 
 - name: Create directory
   become: true
@@ -116,11 +108,11 @@
     login_db: "{{ postgresql_db }}"
     path: /var/lib/pgsql/schema.sql
 
-- name: Grant all privilieges to the votes table for user
+- name: Grant some privilieges to the votes table for user
   become: true
   community.postgresql.postgresql_privs:
     login_db: "{{ postgresql_db }}"
-    privs: ALL
+    privs: SELECT,INSERT,UPDATE
     type: table
     objs: votes
     role: "{{ postgresql_username }}"
